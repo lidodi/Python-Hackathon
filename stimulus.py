@@ -1,6 +1,6 @@
-import psychopy.core as core
-import psychopy.event as event
-import psychopy.visual as visual
+import psychopy.core
+import psychopy.event
+import psychopy.visual
 import pandas as pd
 import numpy as np
 import psychopy.gui
@@ -8,6 +8,7 @@ import psychopy.sound
 import os
 import yaml
 from pathlib import Path
+from enum import Enum
 
 params={"ITI" : 1,"stimTime" : 1,"ITIS": 0.3,
          "stimPos":(0,0),
@@ -15,8 +16,6 @@ params={"ITI" : 1,"stimTime" : 1,"ITIS": 0.3,
          "keyToPress": 'k',
          "cueT":0.1
          }
-filename = 'sorted_BDM_mock_data.csv'
-df = pd.read_csv(os.path.abspath(filename))
 
 class Stimulus:
     #represents any visual stimulus to be shown during game
@@ -28,10 +27,8 @@ class Stimulus:
         #self
 
 class  SBDM_Data:
-    def __init__(self, df, filename):
+    def __init__(self, df):
         self.df=df
-        self.filename = filename # todo should be removed with actual df to game
-        df = pd.read_csv(os.path.abspath(filename)) #todo should be removed
     def create_stim_list(self):
         snack_names=df['StimName'].tolist()
         print(snack_names)
@@ -46,10 +43,27 @@ class  SBDM_Data:
             stimlist.append(A)
         return stimlist
 
-class Block:
-
 class Cue:
-    
+    def __init__(self,win,cue_type,cueT,cuepos,cueSize,cueImageName):
+        self.cuePos=cuepos
+        self.cueSiz=cueSize
+        self.time=cueT
+        self.cue_type=cue_type
+        self.win=win
+        self.cueImageName=cueImageName
+        def draw(self):
+            img = psychopy.visual.ImageStim(
+                win=self.win,
+                image=os.path.normpath("Images/" + self.cueImageName),  # opens a picture from Images folder
+                units="pix",
+                size=cueSize,
+                pos=self.cuepos)
+            img.draw()
+            win.flip()
+            psychopy.core.wait(self.cueT)
+        def play(self):
+            s = psychopy.sound.Sound(value="G", secs=cueT)  # creates a sound
+            s.play()
 
 
 if __name__ == '__main__':
