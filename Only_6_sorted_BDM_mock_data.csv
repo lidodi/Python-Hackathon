@@ -1,0 +1,7 @@
+StimName,ranking,Bid,tag,show,cued
+bamba.jpg,1,5.86666666667,Tag.GO,True,True
+snickers.jpg,2,4.91111111111,Tag.NO_GO,True,False
+bisli.jpg,3,3.71111111111,Tag.S_H,True,False
+mars.jpg,4,3.71111111111,Tag.S_L,True,False
+doritos.jpg,5,2.75555555556,Tag.NO_SHOW,False,False
+kitkat.jpg,6,0.17777777777800002,Tag.GO,True,True

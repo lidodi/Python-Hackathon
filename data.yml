@@ -1,0 +1,24 @@
+break_image: break_image.jpg
+cue_image_name: astriks_gabor.jpg
+cue_position:
+- 0
+- 0
+cue_size:
+- 400
+- 400
+cue_sound_value: G
+cue_time: 0.1
+cue_type: sound
+end_exp_img: end_exp_img
+images_folder_path: Images/
+iti: 1
+itis: 0.3
+key_to_press: k
+pre_cue: 0.7
+stim Position:
+- 0
+- 0
+stim_size:
+- 400
+- 400
+stim_time: 1
