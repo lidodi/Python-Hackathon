@@ -25,7 +25,7 @@ exp_data={"iti" : 1,
         "cue_image_name": 'astriks_gabor.jpg',
         "cue_sound_value":"G",
         "images_folder_path": "Images/",
-        "break_image": "break_image.jpg",
+        "break_text": "BREAK:\n Press any key to continue when you are reday to start the next step",
         "end_exp_img": "end_exp_img"}
 with open('data.yml', 'w') as outfile:
     yaml.dump(exp_data, outfile, default_flow_style=False)
@@ -36,7 +36,7 @@ with open("data.yml", 'r') as stream:
         print(exc)
 
 #dummy data
-filename = 'sorted_BDM_mock_data.csv'
+filename = 'only_6_sorted_BDM_mock_data.csv'
 df = pd.read_csv(os.path.abspath(filename))
 
 #initializing window for all exp.
@@ -45,45 +45,11 @@ win = psychopy.visual.Window(
         size = (1000, 1000),
         fullscr=True)
 
-class game:
-
-    def __init__(self, data_frame, no_of_blocks, break_interval, win):
-        self.data_frame = data_frame
-        self.no_of_blocks = no_of_blocks
-        self.break_interval = break_interval
-        self.win = win
-
-    sbdm = SBDM_data(self.data_frame)
-    stim_list = sbdm.create_stim_list()
-
-    def run_game(self):
-        for block in range(self.no_of_blocks):
-            block = block(stim_list)
-            data_trial[block]=block.run_block()
-            if np.mod(block/self.break_interval) == 0:
-
-                #load the break instructions image
-                img = psychopy.visual.ImageStim(
-                    win=self.win,
-                    image=os.path.normpath("Images/break.bmp"),  # opens a break instructions picture from Images folder
-                )
-
-                #draw the break instructions image
-                img.draw()
-                win.flip()
-
-                psychopy.event.waitKeys(keyList=['space'])
-        curr_final_results=pd.DataFrame(data_trial[0])
-    for block in range(self.no_of_blocks):
-        if self.no_of_blocks > 0:
-            curr_final_results=pd.concat([curr_final_results, data_trial[block]], keys=[f'block no.{block}', f'block no.{block+1}'])
-    final_results = curr_final_results
-
 class Cue:
     def __init__(self, win, params):
         self.win = win
         self.params = params
-        self.cue_pos = self.params['cue_position']
+        self.cue_pos = tuple(self.params['cue_position'])
         self.cue_siz = self.params['cue_size']
         self.time = self.params['cue_time']
         self.cue_type = self.params['cue_type']
@@ -110,7 +76,8 @@ cue=Cue(win,params)
 
 class Stimulus:
     #represents any visual stimulus to be shown during game
-    def __init__(self,name,show,cued,still=0):
+    def __init__(self,df,name,show,cued,still=0):
+        self.df=df
         self.name=name
         self.show=show
         self.cued=cued
@@ -140,7 +107,7 @@ class Trial:
         self.iti = self.params['iti']
         self.itis = self.params['itis']
         self.stim_size = self.params['stim_size']
-        self.stim_position = self.params['stim_position']
+        self.stim_position = tuple(self.params['stim_position'])
         self.cue = cue
         self.success_count = success_count
         self.failure_count = failure_count
@@ -253,3 +220,35 @@ class Block:
             return trials_data
 
 
+class game:
+
+    def __init__(self,params, data_frame, no_of_blocks, break_interval, win):
+        self.data_frame = data_frame
+        self.no_of_blocks = no_of_blocks
+        self.break_interval = break_interval
+        self.win = win
+        self.params=params
+        self.textmsg=self.params['break_text']
+
+    sbdm = SBDM_data(self.data_frame)
+    stim_list = sbdm.create_stim_list()
+
+    def run_game(self):
+        for block in range(self.no_of_blocks):
+            block = block(stim_list)
+            data_trial[block]=block.run_block()
+            if np.mod(block/self.break_interval) == 0:
+
+                #load the break instructions message
+                message = psychopy.visual.TextStim(win, text=self.txtmsg)  # opens a break instructions picture from Images folder
+
+                #draw the break instructions image
+                message.draw()
+                win.flip()
+
+                psychopy.event.waitKeys(keyList=['space'])
+        curr_final_results=pd.DataFrame(data_trial[0])
+        for block in range(self.no_of_blocks):
+            if self.no_of_blocks > 0:
+                curr_final_results=pd.concat([curr_final_results, data_trial[block]], keys=[f'block no.{block}', f'block no.{block+1}'])
+        final_results = curr_final_results
