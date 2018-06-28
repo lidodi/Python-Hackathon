@@ -10,6 +10,7 @@ import yaml
 import json
 from pathlib import Path
 import random
+
 class Stimulus:
     # represents any visual stimulus to be shown during game
     def __init__(self, name, show, cued, still=0):
