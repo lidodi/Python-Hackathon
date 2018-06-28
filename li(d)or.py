@@ -60,7 +60,7 @@ class game:
         for block in range(self.no_of_blocks):
             block = block(stim_list)
             data_trial[block]=block.run_block()
-            if np.mod(block/self.break_interval) == 0
+            if np.mod(block/self.break_interval) == 0:
 
                 #load the break instructions image
                 img = psychopy.visual.ImageStim(
@@ -73,6 +73,11 @@ class game:
                 win.flip()
 
                 psychopy.event.waitKeys(keyList=['space'])
+        curr_final_results=pd.DataFrame(data_trial[0])
+    for block in range(self.no_of_blocks):
+        if self.no_of_blocks > 0:
+            curr_final_results=pd.concat([curr_final_results, data_trial[block]], keys=[f'block no.{block}', f'block no.{block+1}'])
+    final_results = curr_final_results
 
 class Cue:
     def __init__(self, win, params):
