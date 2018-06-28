@@ -7,10 +7,11 @@ import psychopy.gui
 import psychopy.sound
 import os
 import yaml
+import json
 from pathlib import Path
 import random
 
-params={"iti" : 1,
+exp_data={"iti" : 1,
         "stim_time" : 1,
         "itis": 0.3,
         "stim Position":(0,0),
@@ -23,9 +24,18 @@ params={"iti" : 1,
         "cue_position":(0,0),
         "cue_image_name": 'astriks_gabor.jpg',
         "cue_sound_value":"G",
-        "images_folder_path": "Images/"}
+        "images_folder_path": "Images/",
+        "break_image": "break_image.jpg",
+        "end_exp_img": "end_exp_img"}
+with open('data.yml', 'w') as outfile:
+    yaml.dump(exp_data, outfile, default_flow_style=False)
+with open("data.yml", 'r') as stream:
+    try:
+        params=(yaml.load(stream))
+    except yaml.YAMLError as exc:
+        print(exc)
 
-#dumy data
+#dummy data
 filename = 'sorted_BDM_mock_data.csv'
 df = pd.read_csv(os.path.abspath(filename))
 
@@ -49,8 +59,8 @@ class game:
     def run_game(self):
         for block in range(self.no_of_blocks):
             block = block(stim_list)
-            block.run_block()
-            if mod(block/self.break_interval) == 0
+            data_trial[block]=block.run_block()
+            if np.mod(block/self.break_interval) == 0
 
                 #load the break instructions image
                 img = psychopy.visual.ImageStim(
