@@ -76,8 +76,7 @@ cue=Cue(win,params)
 
 class Stimulus:
     #represents any visual stimulus to be shown during game
-    def __init__(self,name,show,cued,still=0):
-        self.df=df
+    def __init__(self,name,show,cued,still=0):s
         self.name=name
         self.show=show
         self.cued=cued
